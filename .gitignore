@@ -1,0 +1,8 @@
+AGENTS.md
+CLAUDE.md
+docs/
+.git-docs/
+bin/
+obj/
+build/
+dist/
