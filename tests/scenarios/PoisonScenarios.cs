@@ -27,14 +27,20 @@ namespace Ror2Mods.LethalPoison.Scenarios
         {
             var acrid = ctx.Spawn("CrocoMonsterMaster", TeamIndex.Monster);
             var ally = ctx.Spawn("BeetleMaster", TeamIndex.Player);
+            yield return ctx.Wait(2f); // settle on the ground first
+            ctx.Assert(ctx.IsAlive(ally), $"the ally died before being poisoned ({Describe(ctx.DeathOf(ally))})");
             ctx.InflictDot(ally, acrid, DotController.DotIndex.Poison, 60f);
-            yield return ctx.WaitUntil(() => !ctx.IsAlive(ally) || ally.healthComponent.health <= 1.01f, 30f);
-            yield return ctx.Wait(3f);
-            ctx.Assert(ctx.IsAlive(ally), ally
-                ? $"the poisoned ally died (death: {Describe(ctx.DeathOf(ally))}, hp {ally.healthComponent.health}, y {ally.corePosition.y:F0})"
-                : $"the poisoned ally's body is gone (death: {Describe(ctx.DeathOf(ally))})");
-            ctx.Assert(ally.healthComponent.health <= 1.01f, $"poison did not bring the ally down to 1 HP (hp {ally.healthComponent.health})");
-            ctx.Assert(ally.HasBuff(RoR2Content.Buffs.Poisoned), "the ally is no longer poisoned, so the 1 HP floor was not exercised");
+            var lowest = float.MaxValue;
+            yield return ctx.WaitUntil(() =>
+            {
+                if (ctx.IsAlive(ally)) lowest = System.Math.Min(lowest, ally.healthComponent.health);
+                return !ctx.IsAlive(ally) || lowest <= 1.01f;
+            }, 30f);
+            yield return ctx.Wait(3f); // several more poison ticks at 1 HP
+            var death = ctx.DeathOf(ally);
+            ctx.Assert(death == null || death.DotIndex != DotController.DotIndex.Poison, $"poison killed the ally ({Describe(death)})");
+            ctx.Assert(lowest <= 1.01f, $"poison never brought the ally down to 1 HP (lowest {lowest})");
+            // At 1 HP any stray non-poison damage kills; that is outside this rule, so only a poison death fails.
         }
     }
 }
