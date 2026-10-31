@@ -4,8 +4,8 @@
   "website_url": "https://github.com/hugo-cacciatori/ror2_lethal_poison",
   "description": "Acrid's poison can kill monsters and bosses instead of stopping at 1 HP. Players and allies are unaffected. Host-side.",
   "dependencies": [
-    "bbepis-BepInExPack-5.4.2121",
-    "RiskofThunder-RoR2BepInExPack-1.43.0",
+    "bbepis-BepInExPack-5.4.2122",
+    "RiskofThunder-RoR2BepInExPack-1.49.0",
     "RiskofThunder-HookGenPatcher-1.2.9"
   ]
 }
