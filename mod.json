@@ -1,9 +1,0 @@
-{
-  "id": "lethal_poison",
-  "name": "LethalPoison",
-  "version": "0.1.0",
-  "description": "Acrid's poison can kill monsters and bosses instead of stopping at 1 HP. Players and allies are unaffected. Host-side.",
-  "libs": ["combat"],
-  "dependencies": [],
-  "network": "server"
-}
